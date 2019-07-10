@@ -26,25 +26,26 @@ class Exporter
                        : $i + 1), $v);
            }
         }
-
         $this->downloadExcel($newExcel, $excelName, $format);
     }
+
 
 
     function downloadExcel($newExcel, $filename, $format)
     {
 
-        if (strtolower($format) === 'xlsx') {
+        if (strtolower($format) == 'xlsx') {
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        }else {
+        } else {
+            $format = "xls";
             header('Content-Type: application/vnd.ms-excel');
         }
 
         header("Content-Disposition: attachment;filename="
             . $filename . date('Y-m-d') . '.' . strtolower($format));
         header('Cache-Control: max-age=0');
-        $objWriter = IOFactory::createWriter($newExcel, $format);
+        $objWriter = IOFactory::createWriter($newExcel, ucfirst($format));
+
         $objWriter->save('php://output');
-        exit;
     }
 }
