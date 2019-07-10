@@ -6,32 +6,36 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Exporter
 {
-    public function export(array $data, array $header, string $excelName = 'excel', string $sheetName = 'sheet')
+    public function export(array $data, array $header = [],string $format = 'Xls', string $excelName = 'excel', string $sheetName = 'sheet')
     {
         $newExcel = new Spreadsheet();
-        $objSheet = $newExcel->getActiveSheet();  //获取当前操作sheet的对象
-        $objSheet->setTitle($sheetName);  //设置当前sheet的标题
-        for ($i = 0; $i < count($header); $i++) {
+        $objSheet = $newExcel->getActiveSheet();
+        $objSheet->setTitle($sheetName);
+
+        $col = $header ? count($header) :
+            isset($data[0]) ? count($data[0]) : 0;
+        for ($i = 0; $i < $col; $i++) {
             $newExcel->getActiveSheet()->getColumnDimension(chr(65 + $i))->setAutoSize(true);
             $objSheet->setCellValue(chr(65 + $i)."1", $header[$i]);
         }
 
         foreach ($data as $i => $value) {
            foreach ($value as $j => $v) {
-               $objSheet->setCellValue(chr(65 + $j), $i+2, $v);
+               $objSheet->setCellValue(chr(65 + $j).($header ? $i + 2
+                       : $i + 1), $v);
            }
         }
 
-        $this->downloadExcel($newExcel, $excelName, 'Xls');
+        $this->downloadExcel($newExcel, $excelName, $format);
     }
 
     //公共文件，用来传入xls并下载
     function downloadExcel($newExcel, $filename, $format)
     {
         // $format只能为 Xlsx 或 Xls
-        if ($format == 'Xlsx') {
+        if (strtolower($format) === 'xlsx') {
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        } elseif ($format == 'Xls') {
+        }else {
             header('Content-Type: application/vnd.ms-excel');
         }
 
