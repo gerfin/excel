@@ -1,0 +1,20 @@
+{
+    "name": "gf2007/excel",
+    "type": "library",
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.8"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "gf2007",
+            "email": "gf2007@vip.qq.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "gerfin\\excel\\": "src"
+        }
+    }
+}
